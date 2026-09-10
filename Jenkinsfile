@@ -9,6 +9,9 @@ def repo = "https://github.com/djsn98/wayshub-frontend.git"
 
 pipeline{
     agent any
+    environment {
+        DOCKER_CREDENTIALS = credentials('dockerhub-credential')
+    }
     stages{
         stage('repo pull'){
             steps{
@@ -28,6 +31,19 @@ pipeline{
                     sh """ssh -o StrictHostKeyChecking=no ${builderserver} << EOF
                     cd ${directory}
                     docker build -t djsn98/wayshub-fe:prod .
+                    exit
+                    EOF"""
+                }
+            }
+        }
+	
+	stage('docker login'){
+            steps{
+                sshagent([cred]){
+                    sh """ssh -o StrictHostKeyChecking=no ${builderserver} << EOF
+                    echo "$DOCKER_CREDENTIALS_PSW" | docker login \
+                        -u "$DOCKER_CREDENTIALS_USR" \
+                        --password-stdin
                     exit
                     EOF"""
                 }
