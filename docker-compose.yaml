@@ -1,0 +1,8 @@
+version: '4'
+services:
+  frontend:
+    container_name: wayshub-frontend
+    image: djsn98/wayshub-fe:prod
+    stdin_open: true
+    ports:
+      - 3000:3000
