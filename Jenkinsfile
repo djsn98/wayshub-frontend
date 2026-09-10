@@ -9,6 +9,9 @@ def repo = "https://github.com/djsn98/wayshub-frontend.git"
 
 pipeline{
     agent any
+    triggers {
+        githubPush()
+    }
     environment {
         DOCKER_CREDENTIALS = credentials('dockerhub-credential')
     }
