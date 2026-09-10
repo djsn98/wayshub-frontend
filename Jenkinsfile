@@ -1,4 +1,7 @@
+def branch = "main"
+def remote = "origin"
 def directory = "~/wayshub-frontend"
+def directory2 = "~/deploy"
 def builder-server = "djsn98@20.200.155.211"
 def app-server = "djsn98@52.147.124.25"
 def cred = "student-ssh"
@@ -7,11 +10,12 @@ def repo = "https://github.com/djsn98/wayshub-frontend.git"
 pipeline{
     agent any
     stages{
-        stage('repo clone'){
+        stage('repo pull'){
             steps{
                 sshagent([cred]){
                     sh """ssh -o StrictHostKeyChecking=no ${builder-server} << EOF
-                    git clone ${repo}
+		    cd ${directory}
+                    git pull ${remote} ${branch}
                     exit
                     EOF"""
                 }
@@ -34,20 +38,19 @@ pipeline{
             steps{
                 sshagent([cred]){
                     sh """ssh -o StrictHostKeyChecking=no ${builder-server} << EOF
-                    docker push djsn98/wayshub-fe:prod .
+                    docker push djsn98/wayshub-fe:prod
                     exit
                     EOF"""
                 }
             }
         }
 
-        stage('docker compose'){
+        stage('deploy'){
             steps{
                 sshagent([cred]){
                     sh """ssh -o StrictHostKeyChecking=no ${app-server} << EOF
-                    git clone ${repo}
-		    cd ${directory}
-	            docker compose up
+		    cd ${directory2}
+ 	            docker compose up -d
                     exit
                     EOF"""
                 }

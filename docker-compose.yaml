@@ -1,5 +1,17 @@
 version: '4'
 services:
+  nginx-proxy:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx-conf:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+    restart: unless-stopped
   frontend:
     container_name: wayshub-frontend
     image: djsn98/wayshub-fe:prod
