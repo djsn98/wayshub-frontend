@@ -68,9 +68,9 @@ pipeline{
             steps{
                 sshagent([cred]){
                     sh """ssh -o StrictHostKeyChecking=no ${appserver} << EOF
+		    cd ${directory2}
 		    docker compose -f docker-compose-fe.yaml down
 		    docker image rm djsn98/wayshub-fe:prod
-		    cd ${directory2}
  	            docker compose -f docker-compose-fe.yaml up -d
                     exit
                     EOF"""
