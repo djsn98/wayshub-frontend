@@ -14,7 +14,7 @@ pipeline{
             steps{
                 sshagent([CREDENTIAL]){
                     sh """ssh -o StrictHostKeyChecking=no ${BUILDER_SERVER} << EOF
-		    cd ${env.DIRECTORY}
+		    cd ${env.WAYSHUB_FE_DIR}
                     git pull ${env.REMOTE} ${env.BRANCH}
                     exit
                     EOF"""
@@ -26,7 +26,7 @@ pipeline{
             steps{
                 sshagent([CREDENTIAL]){
                     sh """ssh -o StrictHostKeyChecking=no ${BUILDER_SERVER} << EOF
-                    cd ${env.DIRECTORY}
+                    cd ${env.WAYSHUB_FE_DIR}
                     docker build -t djsn98/wayshub-fe:prod .
                     exit
                     EOF"""
