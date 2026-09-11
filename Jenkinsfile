@@ -5,7 +5,6 @@ def directory2 = "~/deploy"
 def builderserver = "djsn98@20.200.155.211"
 def appserver = "djsn98@52.147.124.25"
 def cred = "student-ssh"
-def repo = "https://github.com/djsn98/wayshub-frontend.git"
 
 pipeline{
     agent any
@@ -75,6 +74,40 @@ pipeline{
                     exit
                     EOF"""
                 }
+            }
+        }
+    }
+    post {
+	success {
+            withCredentials([
+                string(
+                    credentialsId: 'discord-webhook',
+                    variable: 'DISCORD_WEBHOOK'
+                )
+            ]) {
+                sh '''
+                    curl -H "Content-Type: application/json" \
+                         -d "{
+                           \\"content\\": \\"🚀 Jenkins pipeline berhasil!\\n\\nApplication: wayshub-frontend\\nBuild: #${BUILD_NUMBER}\\nBranch: ${BRANCH_NAME}\\nStatus: SUCCESS\\"
+                         }" \
+                             "$DISCORD_WEBHOOK"
+                    '''
+                }
+        }
+        failure {
+            withCredentials([
+                string(
+                    credentialsId: 'discord-webhook',
+                    variable: 'DISCORD_WEBHOOK'
+                )
+            ]) {
+                sh '''
+                    curl -H "Content-Type: application/json" \
+                         -d "{
+                           \\"content\\": \\"❌ Jenkins pipeline gagal!\\n\\nApplication: wayshub-frontend\\nBuild: #${BUILD_NUMBER}\\nBranch: ${BRANCH_NAME}\\nStatus: FAILED\\"
+                         }" \
+                         "$DISCORD_WEBHOOK"
+                '''
             }
         }
     }
