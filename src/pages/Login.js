@@ -109,7 +109,7 @@ const Login = () => {
                 <form onSubmit={handleSubmit}>
                     <InputField 
                         type="text" 
-                        placeholder="email" 
+                        placeholder="Email" 
                         name="email" 
                         onChange={(name, value) => handleInputChange(name, value)}
                         autoComplete="off"
@@ -120,7 +120,7 @@ const Login = () => {
                     />
                     <InputField 
                         type="password" 
-                        placeholder="password"
+                        placeholder="Password"
                         name="password"
                         onChange={(name, value) => handleInputChange(name, value)}
                         autoComplete="off"
